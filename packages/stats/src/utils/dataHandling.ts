@@ -5,11 +5,18 @@ import {MessageBuilder} from "discord-webhook-node";
 export const handle = async (host: string, port: number, serverStr: string, statusResult: any, offlineServers: any) => {
     await client.hSet(serverStr, "data", JSON.stringify(statusResult));
     await saveData(host, port, statusResult, serverStr);
-    await resolveStatus(host, port, offlineServers);
+    await resolveStatus(host, port, offlineServers, serverStr);
 }
 
-async function resolveStatus(host: string, port: number, offlineServers: any) {
+async function resolveStatus(host: string, port: number, offlineServers: any, serverStr: string) {
+    const noNotify = await client.hExists("no_notify", serverStr),
+        wildcardNoNotify = await client.hExists("no_notify", `server:*.${host.substring(host.indexOf(".") + 1)}:${port}`);
     if (!offlineServers.some(server => server.host == host && server.port == port))
+        return;
+
+    await client.set("offline", JSON.stringify(offlineServers.filter(server => server.host != host || server.port != port)));
+
+    if (noNotify || wildcardNoNotify)
         return;
 
     const embed = new MessageBuilder()
@@ -17,8 +24,6 @@ async function resolveStatus(host: string, port: number, offlineServers: any) {
         .setTimestamp();
 
     await hook.send(embed);
-
-    await client.set("offline", JSON.stringify(offlineServers.filter(server => server.host != host || server.port != port)));
 }
 
 export const saveData = async (host: string, port: number, rawData: any, serverStr: string) => {

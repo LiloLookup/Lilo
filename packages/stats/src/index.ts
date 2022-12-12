@@ -27,8 +27,7 @@ export const startService = async () => {
                 statusLegacy(host, port).then(async (statusLegacyResult) => {
                     await handle(host, port, serverStr, statusLegacyResult, offlineServers);
                 }).catch(async () => {
-                    await saveData(host, port, {players: {online: null, max: null}, roundTripLatency: null}, serverStr);
-                    await startMonitoring(host, port);
+                    await startMonitoring(host, port, serverStr);
                 });
             });
         }
