@@ -2,19 +2,20 @@ import {hook} from "@core/app";
 import {client} from "@core/redis";
 import {MessageBuilder} from "discord-webhook-node";
 
-export const handle = async (host: string, port: number, serverStr: string, statusResult: any, offlineServers: any) => {
-    await client.hSet(serverStr, "data", JSON.stringify(statusResult));
-    await saveData(host, port, statusResult, serverStr);
-    await resolveStatus(host, port, offlineServers, serverStr);
+export const handle = async (host: string, port: number, statusResult: any, offlineServers: any) => {
+    await client.hSet(`server:${host}:${port}`, "data", JSON.stringify(statusResult));
+    await saveData(host, port, statusResult);
+    await resolveStatus(host, port, offlineServers);
 }
 
-async function resolveStatus(host: string, port: number, offlineServers: any, serverStr: string) {
-    const noNotify = await client.hExists("no_notify", serverStr),
-        wildcardNoNotify = await client.hExists("no_notify", `server:*.${host.substring(host.indexOf(".") + 1)}:${port}`);
+async function resolveStatus(host: string, port: number, offlineServers: any) {
     if (!offlineServers.some(server => server.host == host && server.port == port))
         return;
 
     await client.set("offline", JSON.stringify(offlineServers.filter(server => server.host != host || server.port != port)));
+
+    const noNotify = await client.hExists("no_notify", `server:${host}:${port}`),
+        wildcardNoNotify = await client.hExists("no_notify", `server:*.${host.substring(host.indexOf(".") + 1)}:${port}`);
 
     if (noNotify || wildcardNoNotify)
         return;
@@ -26,9 +27,10 @@ async function resolveStatus(host: string, port: number, offlineServers: any, se
     await hook.send(embed);
 }
 
-export const saveData = async (host: string, port: number, rawData: any, serverStr: string) => {
+export const saveData = async (host: string, port: number, rawData: any) => {
     const tzOffset = (new Date()).getTimezoneOffset() * 60000,
-        time = (new Date(Date.now() - tzOffset)).toISOString();
+        time = (new Date(Date.now() - tzOffset)).toISOString(),
+        serverStr = `server:${host}:${port}`;
 
     let stats = JSON.parse(await client.hGet(serverStr, "stats") || "[]");
     stats.push({

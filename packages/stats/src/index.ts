@@ -20,14 +20,13 @@ export const startService = async () => {
             let host = statusServers[server].split(":")[0].toLowerCase(),
                 port = parseInt(statusServers[server].split(":")[1]);
 
-            const serverStr = `server:${host}:${port}`;
             status(host, port).then(async (statusResult) => {
-                await handle(host, port, serverStr, statusResult, offlineServers);
+                await handle(host, port, statusResult, offlineServers);
             }).catch(() => {
                 statusLegacy(host, port).then(async (statusLegacyResult) => {
-                    await handle(host, port, serverStr, statusLegacyResult, offlineServers);
+                    await handle(host, port, statusLegacyResult, offlineServers);
                 }).catch(async () => {
-                    await startMonitoring(host, port, serverStr);
+                    await startMonitoring(host, port);
                 });
             });
         }

@@ -95,6 +95,11 @@ h3 {
     display: flex;
 }
 
+.server-header p {
+    margin-left: 5px;
+    font-size: 1.17em;
+}
+
 .server-header h3 {
     margin-right: auto;
 }
