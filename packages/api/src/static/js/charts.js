@@ -1,5 +1,5 @@
 let req = new XMLHttpRequest();
-req.open("GET", `http://localhost:3000/server/${/[^/]*$/.exec(document.location.href)[0]}/stats?size=480`, true);
+req.open("GET", `https://nuro.northernsi.de/server/${/[^/]*$/.exec(document.location.href)[0]}/stats?size=480`, true);
 
 req.onload = () => {
     const stats = JSON.parse(req.responseText);

@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+bun.lockb
+package-lock.json
+
+# Credentials
+.env
+
+# macOS
+**/.DS_Store
+
+# Launcher
+!launcher.js
+
+# Compiled TypeScript
+*.js
+
+# Frontend JS
+!packages/**/static/js/*.js
