@@ -1,0 +1,30 @@
+{
+  "name": "core",
+  "description": "Backend Core for everything VirtualDrive",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "docs": "doctoc --title '**Table of content**' README.md",
+    "lint": "eslint --ext js,ts,tsx --fix .",
+    "docker:start": "docker-compose up --build",
+    "docker:deploy": "docker-compose up --build -d",
+    "docker:stop": "docker-compose down"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.14",
+    "typescript": "~4.8.4"
+  },
+  "dependencies": {
+    "@types/node": "^18.11.5",
+    "discord-webhook-node": "^1.1.8",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "minecraft-server-util": "^5.3.1",
+    "redis": "^4.5.1",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.0"
+  }
+}

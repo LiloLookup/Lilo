@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@core/api": [
+                "packages/api/src"
+            ],
+            "@core/redis": [
+                "packages/redis/src"
+            ],
+            "@core/stats": [
+                "packages/stats/src"
+            ],
+            "@core/app": [
+                "apps/nuro/src"
+            ]
+        },
+        "esModuleInterop": true
+    }
+}
