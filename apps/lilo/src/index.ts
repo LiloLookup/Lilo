@@ -10,7 +10,7 @@ export const hook = new Webhook(process.env.DISCORD_WEBHOOK_URL);
 (async () => {
     await startService();
     const embed = new MessageBuilder()
-        .setDescription(`Nuro is now ready!`)
+        .setDescription(`Lilo is now ready!`)
         .setTimestamp();
     
     await hook.send(embed);

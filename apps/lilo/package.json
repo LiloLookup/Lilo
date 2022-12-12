@@ -1,6 +1,6 @@
 {
     "name": "@core/app",
-    "description": "MCStats App",
+    "description": "Lilo App",
     "version": "1.0.0",
     "type": "commonjs",
     "devDependencies": {

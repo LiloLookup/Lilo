@@ -12,7 +12,7 @@
                 "../../packages/stats/src"
             ],
             "@core/app": [
-                "../../apps/nuro/src"
+                "../../apps/lilo/src"
             ]
         },
         "esModuleInterop": true

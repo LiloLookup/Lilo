@@ -3,9 +3,11 @@ import {status, statusLegacy} from "minecraft-server-util";
 import {client} from "@core/redis";
 import FS from "node:fs";
 
+const defaultServerIcon = require("../../../../settings.json").default_icon;
+
 export const server = async (req: Request, res: Response) => {
     let host = req.params.address.split(":")[0].toLowerCase(),
-    port = parseInt(req.params.address.split(":")[1]) || 25565;
+        port = parseInt(req.params.address.split(":")[1]) || 25565;
 
     let serverData = JSON.parse(await client.hGet(`server:${host}:${port}`, "data"));
     if (port > 65535 || isNaN(port))
@@ -33,7 +35,7 @@ export const server = async (req: Request, res: Response) => {
         let serverHTML = FS.readFileSync(`${__dirname}/../static/server/index.html`, "utf-8");
         serverHTML = serverHTML.replace(/{server_name}/g, `${host}${port != 25565 ? `:${port}` : ""}`);
         serverHTML = serverHTML.replace(/{motd}/g, !serverData.motd.html ? serverData.motd : serverData.motd.html.replace(/\n/g, "<br>"));
-        serverHTML = serverHTML.replace(/{favicon}/g, serverData.favicon);
+        serverHTML = serverHTML.replace(/{favicon}/g, serverData.favicon ? serverData.favicon : defaultServerIcon);
         serverHTML = serverHTML.replace(/{latency}/g, !serverData.roundTripLatency ? "0ms" : `${serverData.roundTripLatency}ms`);
         serverHTML = serverHTML.replace(/{version}/g, !serverData.version.name ? serverData.version : serverData.version.name);
         serverHTML = serverHTML.replace(/{version_number}/g, !serverData.version.protocol ? "" : ` (${serverData.version.protocol})`);
