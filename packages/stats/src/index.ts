@@ -31,7 +31,7 @@ export const startService = async () => {
             });
         }
 
-        setTimeout(loop, 45000);
+        setTimeout(loop, 60000);
     }
 
     await loop();

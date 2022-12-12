@@ -15,7 +15,8 @@ async function resolveStatus(host: string, port: number, offlineServers: any) {
     await client.set("offline", JSON.stringify(offlineServers.filter(server => server.host != host || server.port != port)));
 
     const noNotify = await client.hExists("no_notify", `server:${host}:${port}`),
-        wildcardNoNotify = await client.hExists("no_notify", `server:*.${host.substring(host.indexOf(".") + 1)}:${port}`);
+        wildcardNoNotify = await client.hExists("no_notify", `server:*.${host.match(/\./g).length >= 2
+            ? host.substring(host.indexOf(".") + 1) : host}:${port}`);
 
     if (noNotify || wildcardNoNotify)
         return;

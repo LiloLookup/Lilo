@@ -22,7 +22,7 @@ export const startMonitoring = async (host: string, port: number) => {
             });
 
             if (i < 4) {
-                setTimeout(loop, 3000);
+                setTimeout(loop, 2000);
             } else if (!offline) {
                 const noNotify = await client.hExists("no_notify", serverStr),
                     wildcardNoNotify = await client.hExists("no_notify", `server:*.${host.substring(host.indexOf(".") + 1)}:${port}`);
@@ -44,7 +44,7 @@ export const startMonitoring = async (host: string, port: number) => {
 
                 offlineServers.push({"host": host, "port": port});
                 await client.set("offline", JSON.stringify(offlineServers));
-                
+
                 await saveData(host, port, {players: {online: null, max: null}, roundTripLatency: null});
                 await client.hSet(`server:${host}:${port}`, "last_data", JSON.stringify(await client.hGet(`server:${host}:${port}`, "data")));
                 await client.hSet(`server:${host}:${port}`, "data", JSON.stringify({
