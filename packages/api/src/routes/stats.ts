@@ -6,8 +6,11 @@ export const stats = async (req: Request, res: Response) => {
         serverStats = JSON.parse(await client.hGet(`server:${req.params.address.split(":")[0].toLowerCase()}:${port}`, "stats")),
         size = parseInt(req.query.size as string) || 0;
 
-    if (serverStats && size > serverStats.length)
+    if (!serverStats)
         return res.status(404).send({"status": 404});
+
+    if (size > serverStats.length)
+        return res.send(serverStats);
 
     let result = [];
     for (let i = 1; i <= size; i++) {
