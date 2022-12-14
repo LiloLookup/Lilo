@@ -2,13 +2,12 @@ import {hook} from "@core/app";
 import {client} from "@core/redis";
 import {MessageBuilder} from "discord-webhook-node";
 
-export const handle = async (host: string, port: number, statusResult: any, offlineServers: any) => {
+export const handle = async (host: string, port: number, statusResult: any) => {
     await client.hSet(`server:${host}:${port}`, "data", JSON.stringify(statusResult));
     await saveData(host, port, statusResult);
-    await resolveStatus(host, port, offlineServers);
 }
 
-async function resolveStatus(host: string, port: number, offlineServers: any) {
+export async function resolveStatus(host: string, port: number, offlineServers: any) {
     if (!offlineServers.some(server => server.host == host && server.port == port))
         return;
 

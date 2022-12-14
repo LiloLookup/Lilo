@@ -2,7 +2,7 @@ import {client} from "@core/redis";
 import {hook} from "@core/app";
 import {status, statusLegacy} from "minecraft-server-util";
 import {MessageBuilder} from "discord-webhook-node";
-import {saveData} from "./dataHandling";
+import {handle, saveData} from "./dataHandling";
 
 const defaultServerIcon = require("../../../../settings.json").default_icon;
 
@@ -11,10 +11,14 @@ export const startMonitoring = async (host: string, port: number) => {
         offline = true;
     const serverStr = `server:${host}:${port}`,
         loop = async function () {
-            status(host, port).then(() => {
+            status(host, port).then(async (statusResult) => {
+                if (!offline)
+                    await handle(host, port, statusResult);
                 offline = false;
             }).catch(() => {
-                statusLegacy(host, port).then(() => {
+                statusLegacy(host, port).then(async (statusLegacyResult) => {
+                    if (!offline)
+                        await handle(host, port, statusLegacyResult);
                     offline = false;
                 }).catch(() => {
                     offline = true;

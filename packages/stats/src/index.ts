@@ -2,7 +2,7 @@ import {client} from "@core/redis";
 import {app} from "@core/api";
 import {status, statusLegacy} from "minecraft-server-util";
 import {startMonitoring} from "./utils/downtime";
-import {handle, saveData} from "./utils/dataHandling";
+import {handle, resolveStatus, saveData} from "./utils/dataHandling";
 
 export const startService = async () => {
     await client.connect();
@@ -21,10 +21,12 @@ export const startService = async () => {
                 port = parseInt(statusServers[server].split(":")[1]);
 
             status(host, port).then(async (statusResult) => {
-                await handle(host, port, statusResult, offlineServers);
+                await handle(host, port, statusResult);
+                await resolveStatus(host, port, offlineServers);
             }).catch(() => {
                 statusLegacy(host, port).then(async (statusLegacyResult) => {
-                    await handle(host, port, statusLegacyResult, offlineServers);
+                    await handle(host, port, statusLegacyResult);
+                    await resolveStatus(host, port, offlineServers);
                 }).catch(async () => {
                     await startMonitoring(host, port);
                 });
