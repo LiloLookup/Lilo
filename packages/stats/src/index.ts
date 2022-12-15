@@ -1,8 +1,9 @@
 import {client} from "@core/redis";
 import {app} from "@core/api";
 import {status, statusLegacy} from "minecraft-server-util";
+
 import {startMonitoring} from "./utils/downtime";
-import {handle, resolveStatus, saveData} from "./utils/dataHandling";
+import {handle, resolveStatus} from "./utils/dataHandling";
 
 export const startService = async () => {
     await client.connect();

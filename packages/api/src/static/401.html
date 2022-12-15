@@ -1,19 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Lilo - Quick Server Lookup</title>
+    <title>401 - Lilo</title>
     <link rel="stylesheet" href="/css/general.css" type="text/css">
+    <link rel="stylesheet" href="/css/server.css" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1">
+    <link rel="icon" href="{favicon}">
 
     <!-- Primary Meta Tags -->
-    <meta name="title" content="Lilo - Quick Server Lookup">
+    <meta name="title" content="Lilo - 401">
     <meta name="description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://lilo.northernsi.de/">
-    <meta property="og:title" content="Lilo - Quick Server Lookup">
+    <meta property="og:title" content="Lilo - 401">
     <meta property="og:description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
     <meta property="og:image" content="https://lilo.northernsi.de/image/metabg.png">
@@ -21,13 +24,13 @@
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://lilo.northernsi.de/">
-    <meta property="twitter:title" content="Lilo - Quick Server Lookup">
+    <meta property="twitter:title" content="Lilo - 401">
     <meta property="twitter:description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
     <meta property="twitter:image" content="https://lilo.northernsi.de/image/metabg.png">
 </head>
 <body>
-<div class="general-background">
+<div class="container-fluid landing-background">
     <div class="pink-bg-bubble"></div>
     <div class="yellow-bg-bubble"></div>
     <div class="blue-bg-bubble"></div>
@@ -35,13 +38,21 @@
     <div class="purple-bg-bubble"></div>
 </div>
 <div class="page">
-    <div class="title">
-        <p class="header">Lilo</p>
-        <p class="subtitle">The only tool you'll ever need to search through a database containing thousands of
-            Minecraft servers</p>
+    <div class="container">
+        <div class="favicon">
+            <img
+                src="{favicon}"
+                width="64px" alt="Server Favicon">
+        </div>
+        <div class="align-right">
+            <div class="server-header">
+                <h3>401 - Unauthorized</h3>
+            </div>
+        </div>
     </div>
     <div class="bar">
-        <form onsubmit="window.location.href = `/server/${document.getElementsByClassName('input')[0].value}`; return false;">
+        <form
+            onsubmit="window.location.href = `/server/${document.getElementsByClassName('input')[0].value}`; return false;">
             <div class="bar-input">
                 <input type="text" class="input" autocomplete="off" placeholder="Search">
             </div>

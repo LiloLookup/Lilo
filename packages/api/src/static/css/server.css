@@ -1,80 +1,11 @@
-:root {
-    --pink: #45e2fc;
-    --purple: #bdfc89;
-    --blue: #96ff8e;
-    --green: #7cffeb;
-    --yellow: #96f6ff;
-}
-
-* {
-    -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
-    user-drag: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-.apexcharts-canvas {
-    background-color: rgb(255 255 255 / 9%);
-    border-radius: 10px;
-    padding: 20px;
-}
-
-html {
-    height: 100vh;
-    font-family: Arial;
-}
-
-body {
-    background-color: #1a1a1a;
+.motd {
     margin: 0;
 }
 
-.background {
-    filter: blur(100px);
-    margin-top: -5%;
-    position: absolute;
-}
-
-.server {
-    background-color: rgba(40, 40, 40, 0.65);
-    border-radius: 10px;
-    padding: 20px;
-    color: white;
-}
-
-.server-container {
-    margin-top: 50px;
-    margin-bottom: 10px;
-    width: 100vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.info-container {
-    width: 100vw;
-    margin-bottom: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.info {
-    background-color: rgba(40, 40, 40, 0.65);
-    border-radius: 10px;
-    padding: 20px;
-    color: white;
-}
-
-.chart-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.container .small-info {
+    font-size: 12px;
+    margin: 0;
+    max-width: 350px;
 }
 
 .favicon {
@@ -88,115 +19,21 @@ body {
     vertical-align: middle;
 }
 
-h3 {
-    margin: 0;
-}
-
 .server-header {
     display: flex;
 }
 
 .server-header p {
+    margin: 0;
     margin-left: 5px;
     font-size: 1.17em;
 }
 
 .server-header h3 {
+    margin: 0;
     margin-right: auto;
 }
 
-p {
-    margin: 0;
-}
-
-.pink-bg-bubble {
-    position: absolute;
-    background-color: var(--pink);
-    height: 15vw;
-    width: 15vw;
-    filter: blur(140px);
-    margin-left: 15%;
-}
-
-.purple-bg-bubble {
-    position: absolute;
-    background-color: var(--purple);
-    height: 15vw;
-    width: 15vw;
-    margin-left: 10%;
-    filter: blur(160px);
-    margin-top: 30%;
-}
-
-.blue-bg-bubble {
-    position: absolute;
-    background-color: var(--blue);
-    height: 20vw;
-    width: 20vw;
-    margin-left: 42%;
-    filter: blur(200px);
-    margin-right: 10%;
-    margin-top: 12%;
-}
-
-.yellow-bg-bubble {
-    position: absolute;
-    background-color: var(--yellow);
-    height: 15vw;
-    width: 15vw;
-    margin-left: 71%;
-    filter: blur(170px);
-    margin-right: 5%;
-    margin-top: 30%;
-}
-
-.green-bg-bubble {
-    position: absolute;
-    background-color: var(--green);
-    height: 12vw;
-    width: 12vw;
-    margin-left: 77%;
-    filter: blur(130px);
-    margin-right: 5%;
-    margin-top: 3%;
-}
-
-#searchbar {
-    display: flex;
-}
-
-#searchInput {
-    background-color: rgba(255, 255, 255, 0.15);
-    color: #dfdfdf;
-    font-size: 18px;
-    text-align: center;
-}
-
-#searchbar input {
-    margin-top: 15px;
-    border: none;
-    border-radius: 7px;
-    height: 40px;
-    outline: none;
-    width: 400px;
-    transition: 1s;
-}
-
-#searchbar input:focus {
-    scale: 1.01;
-    transition: 1s;
-}
-
-#searchbar input::placeholder {
-    color: #afafaf;
-    font-size: 15px;
-}
-
-.search-container {
-    margin-top: 50px;
-    margin-bottom: 10px;
-    width: 100vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.apexcharts-zoomable {
+    background-color: unset !important;
 }

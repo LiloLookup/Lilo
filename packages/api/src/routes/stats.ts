@@ -1,5 +1,6 @@
-import {Request, Response} from "express";
+import {internalServerErrorHTML} from "@core/api";
 import {client} from "@core/redis";
+import {Request, Response} from "express";
 
 export const stats = async (req: Request, res: Response) => {
     const port = parseInt(req.params.address.split(":")[1]) || 25565,
@@ -25,5 +26,5 @@ export const stats = async (req: Request, res: Response) => {
     if (result)
         return res.send(result);
 
-    return res.status(500).send({"status": 500});
+    return res.status(500).json(internalServerErrorHTML);
 }

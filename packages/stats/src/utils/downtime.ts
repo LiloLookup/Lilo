@@ -2,9 +2,9 @@ import {client} from "@core/redis";
 import {hook} from "@core/app";
 import {status, statusLegacy} from "minecraft-server-util";
 import {MessageBuilder} from "discord-webhook-node";
-import {handle, saveData} from "./dataHandling";
 
-const defaultServerIcon = require("../../../../settings.json").default_icon;
+import {handle, saveData} from "./dataHandling";
+import {defaultServerIcon} from "@core/api";
 
 export const startMonitoring = async (host: string, port: number) => {
     let i = 0,

@@ -1,0 +1,54 @@
+.img-center {
+    margin-top: 10px;
+
+    display: flex;
+    justify-content: center;
+}
+
+.img-center img {
+    border-radius: 10px;
+
+    max-width: 400px;
+}
+
+.time {
+    font-size: 10px;
+}
+
+textarea {
+    margin-top: 15px;
+    border: none;
+    border-radius: 7px;
+    height: 40px;
+    outline: none;
+    width: 400px;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #dfdfdf;
+    font-size: 18px;
+    text-align: center;
+}
+
+textarea:focus {
+    scale: 1.01;
+    transition: 1s;
+}
+
+textarea::placeholder {
+    color: #afafaf;
+    font-size: 15px;
+}
+
+#submitBtn {
+    width: 79px;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 10px;
+    display: inline-block;
+    margin-right: 15px;
+    border: 0;
+    background-color: rgba(150, 150, 150, 0.25);
+    color: white;
+    border-radius: 7px;
+    height: 30px;
+}

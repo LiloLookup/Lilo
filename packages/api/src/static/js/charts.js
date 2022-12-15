@@ -1,3 +1,5 @@
+document.querySelector("#chart").innerHTML = "Loading data...";
+
 let req = new XMLHttpRequest();
 req.open("GET", `https://lilo.northernsi.de/server/${/[^/]*$/.exec(document.location.href)[0]}/stats?size=640`, true);
 
@@ -21,8 +23,11 @@ req.onload = () => {
             height: 300,
             width: 400,
             type: "area",
-            foreColor: "#fff",
-            parentHeightOffset: 60
+            foreColor: "#fff"
+        },
+        theme: {
+            mode: "dark",
+            palette: "palette1"
         },
         dataLabels: {
             enabled: false
@@ -53,8 +58,20 @@ req.onload = () => {
         }
     };
 
-    let chart = new ApexCharts(document.querySelector("#chart"), options);
-    chart.render();
+    switch (req.status) {
+        case 200:
+            document.querySelector("#chart").innerHTML = "";
+            let chart = new ApexCharts(document.querySelector("#chart"), options);
+            chart.render();
+            break;
+        default:
+            document.querySelector("#chart").innerHTML = "No data available";
+            break;
+    }
+}
+
+req.onerror = () => {
+    document.querySelector("#chart").innerHTML = "No data available";
 }
 
 req.send(null);
