@@ -2,7 +2,7 @@ import {internalServerErrorHTML} from "@core/api";
 import {client} from "@core/redis";
 import {Request, Response} from "express";
 
-export const stats = async (req: Request, res: Response) => {
+export const serverStats = async (req: Request, res: Response) => {
     const port = parseInt(req.params.address.split(":")[1]) || 25565,
         serverStats = JSON.parse(await client.hGet(`server:${req.params.address.split(":")[0].toLowerCase()}:${port}`, "stats")),
         size = parseInt(req.query.size as string) || 0;

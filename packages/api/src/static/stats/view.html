@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>{server_name} - Lilo</title>
+    <title>Global Statistics - Lilo</title>
     <link rel="stylesheet" href="../css/general.css" type="text/css">
-    <link rel="stylesheet" href="../css/server.css" type="text/css">
+    <link rel="stylesheet" href="../css/stats.css" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1">
     <link rel="icon" href="{favicon}">
 
     <!-- Primary Meta Tags -->
-    <meta name="title" content="Lilo - {server_name}">
+    <meta name="title" content="Global Statistics - Lilo">
     <meta name="description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://lilo.northernsi.de/">
-    <meta property="og:title" content="Lilo - {server_name}">
+    <meta property="og:title" content="Global Statistics - Lilo">
     <meta property="og:description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
     <meta property="og:image" content="https://lilo.northernsi.de/image/metabg.png">
@@ -24,7 +24,7 @@
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://lilo.northernsi.de/">
-    <meta property="twitter:title" content="Lilo - {server_name}">
+    <meta property="twitter:title" content="Global Statistics - Lilo">
     <meta property="twitter:description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
     <meta property="twitter:image" content="https://lilo.northernsi.de/image/metabg.png">
@@ -38,36 +38,35 @@
     <div class="purple-bg-bubble"></div>
 </div>
 <div class="page">
-    <div class="container">
-        <div class="favicon">
-            <img src="{favicon}" width="64px" alt="Server Favicon">
+    <div class="container text-align-left">
+        <div class="title">
+            <p class="header">Indexed Servers</p>
         </div>
-        <div class="align-right">
-            <div class="server-header">
-                <h3>{server_name}</h3>
-                <p>{player_count}</p>
-            </div>
-            <p class="motd">{motd}</p>
-            <p class="small-info">
-                running on <span>{version}</span> <span>{version_number}</span> with a latency of <span>{latency}</span>
-            </p>
+        <span>{servers}</span>
+    </div>
+    <div class="container text-align-left">
+        <div class="title">
+            <p class="header">Monitored Servers</p>
         </div>
+        <span>{monitored}</span>
     </div>
-    <div class="container">
-        <div id="chart"></div>
-        <script type="text/javascript" src="../js/charts.js"></script>
+    <div class="container text-align-left">
+        <div class="title">
+            <p class="header">Offline Servers</p>
+        </div>
+        <span>{offline}</span>
     </div>
-    <div class="bar">
-        <form
-            onsubmit="window.location.href = `/server/${document.getElementsByClassName('input')[0].value}`; return false;">
-            <div class="bar-input">
-                <input type="text" class="input" autocomplete="off" placeholder="Search">
-            </div>
-            <script>
-                let input = document.getElementsByClassName("input")[0];
-                input.focus();
-            </script>
-        </form>
+    <div class="container text-align-left">
+        <div class="title">
+            <p class="header">Blog Posts</p>
+        </div>
+        <span>{blogposts}</span>
+    </div>
+    <div class="container text-align-left">
+        <div class="title">
+            <p class="header">Registered Users</p>
+        </div>
+        <span>{users}</span>
     </div>
 </div>
 </body>

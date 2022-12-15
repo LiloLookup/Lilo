@@ -4,7 +4,7 @@ import {Request, Response} from "express";
 import {status, statusLegacy} from "minecraft-server-util";
 import FS from "node:fs";
 
-export const server = async (req: Request, res: Response) => {
+export const viewServer = async (req: Request, res: Response) => {
     let host = req.params.address.split(":")[0].toLowerCase(),
         port = parseInt(req.params.address.split(":")[1]) || 25565;
 
@@ -32,7 +32,7 @@ export const server = async (req: Request, res: Response) => {
 
     async function displayHTML() {
         let statusServers = JSON.parse(await client.get("status") || "[]"),
-            serverHTML = FS.readFileSync(`${__dirname}/../static/server/view.html`, "utf-8");
+            serverHTML = FS.readFileSync(`${__dirname}/../../static/server/view.html`, "utf-8");
 
         if (!statusServers.includes(`${host}:${port}`)) {
             statusServers.push(`${host}:${port}`);

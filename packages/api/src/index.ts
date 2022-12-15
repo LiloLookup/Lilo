@@ -7,11 +7,12 @@ import process from "node:process";
 
 export const app = Express();
 
-import {server} from "./routes/server";
-import {stats} from "./routes/stats";
-import {blog} from "./routes/blog";
-import {postBlog} from "./routes/postblog";
-import {discordCallback} from "./routes/discordCallback";
+import {viewServer} from "./routes/server/viewServer";
+import {serverStats} from "./routes/server/serverStats";
+import {viewBlog} from "./routes/blog/viewBlog";
+import {postBlog} from "./routes/blog/postBlog";
+import {callback} from "./routes/auth/callback";
+import {globalStats} from "./routes/stats/globalStats";
 
 dotenv.config();
 
@@ -30,11 +31,11 @@ app.get("/server", async function (req: Request, res: Response) {
 });
 
 app.get("/server/:address", async function (req: Request, res: Response) {
-    await server(req, res);
+    await viewServer(req, res);
 });
 
 app.get("/server/:address/stats", async function (req: Request, res: Response) {
-    await stats(req, res);
+    await serverStats(req, res);
 });
 
 app.get("/blog/create", async function (req: Request, res: Response) {
@@ -45,7 +46,7 @@ app.get("/blog/create", async function (req: Request, res: Response) {
 });
 
 app.get("/blog/:id", async function (req: Request, res: Response) {
-    await blog(req, res);
+    await viewBlog(req, res);
 });
 
 app.post("/blog/post", Express.json(), async function (req: Request, res: Response) {
@@ -55,12 +56,16 @@ app.post("/blog/post", Express.json(), async function (req: Request, res: Respon
     await postBlog(req, res);
 });
 
+app.get("/stats", Express.json(), async function (req: Request, res: Response) {
+    await globalStats(req, res);
+});
+
 app.get("/auth/login", async function (req: Request, res: Response) {
     return res.redirect(process.env.DISCORD_OAUTH_URL);
 });
 
-app.get("/auth/discordCallback", async function (req: Request, res: Response) {
-    await discordCallback(req, res);
+app.get("/auth/callback", async function (req: Request, res: Response) {
+    await callback(req, res);
 });
 
 app.get("/logout", async function (req: Request, res: Response) {
