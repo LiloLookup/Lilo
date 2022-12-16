@@ -13,6 +13,7 @@ import {viewBlog} from "./routes/blog/viewBlog";
 import {postBlog} from "./routes/blog/postBlog";
 import {callback} from "./routes/auth/callback";
 import {globalStats} from "./routes/stats/globalStats";
+import {featuredServer} from "./routes/landing/featuredServer";
 
 dotenv.config();
 
@@ -58,6 +59,10 @@ app.post("/blog/post", Express.json(), async function (req: Request, res: Respon
 
 app.get("/stats", Express.json(), async function (req: Request, res: Response) {
     await globalStats(req, res);
+});
+
+app.get("/api/featuredServer", Express.json(), async function (req: Request, res: Response) {
+    await featuredServer(req, res);
 });
 
 app.get("/auth/login", async function (req: Request, res: Response) {

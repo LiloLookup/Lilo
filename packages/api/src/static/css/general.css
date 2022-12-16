@@ -105,6 +105,10 @@ body {
     width: max-content;
 }
 
+a {
+    text-decoration: none;
+}
+
 a:link {
     color: unset;
 }
@@ -119,6 +123,14 @@ a:hover {
 
 a:active {
     color: #c0c0c0;
+}
+
+.server a:hover {
+    color: unset;
+}
+
+.server a:active {
+    color: unset;
 }
 
 .pink-bg-bubble {
@@ -176,4 +188,9 @@ a:active {
     margin-right: 5%;
     margin-top: 3%;
     z-index: -9999;
+}
+
+hr {
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 5px;
 }

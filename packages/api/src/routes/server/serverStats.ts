@@ -26,5 +26,5 @@ export const serverStats = async (req: Request, res: Response) => {
     if (result)
         return res.send(result);
 
-    return res.status(500).json(internalServerErrorHTML);
+    return res.status(500).send(internalServerErrorHTML);
 }

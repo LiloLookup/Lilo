@@ -12,7 +12,7 @@ export const callback = async (req: any, res: any): Promise<any> => {
     const code = req.query.code as string;
 
     if (!code)
-        return res.status(500).json(internalServerErrorHTML);
+        return res.status(500).send(internalServerErrorHTML);
 
     try {
         const formData = new URLSearchParams({
@@ -31,7 +31,7 @@ export const callback = async (req: any, res: any): Promise<any> => {
 
         const {access_token} = response.data;
         if (!response.data)
-            return res.status(500).json(internalServerErrorHTML);
+            return res.status(500).send(internalServerErrorHTML);
 
         const userResponse = await Axios.get("https://discord.com/api/v8/users/@me", {
             headers: {
@@ -58,6 +58,6 @@ export const callback = async (req: any, res: any): Promise<any> => {
         res.redirect(`https://lilo.northernsi.de/blog/create`);
     } catch (err) {
         console.log(err);
-        return res.status(500).json(internalServerErrorHTML);
+        return res.status(500).send(internalServerErrorHTML);
     }
 };
