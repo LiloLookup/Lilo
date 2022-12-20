@@ -8,6 +8,9 @@ let options = {
         data: [1,2,3,5]
     }],
     chart: {
+        animations: {
+            enabled: false
+        },
         height: 300,
         width: 400,
         type: "area",

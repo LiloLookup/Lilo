@@ -1,13 +1,13 @@
 document.getElementsByClassName("server")[0].innerHTML = "Loading data...";
 
 let req = new XMLHttpRequest();
-req.open("GET", "http://lilo.northernsi.de/api/featuredServer", true);
+req.open("GET", `${/[^/]*$/.exec(document.location.href)[0]}/api/featuredServer`, true);
 
 req.onload = () => {
     const serverData = JSON.parse(req.responseText);
 
     let serverHTML = `
-        <a href="https://lilo.northernsi.de/server/{server_name}">
+        <a href="/server/{server_name}">
             <div class="favicon">
                 <img src="{favicon}" width="64px" alt="Server Favicon">
             </div>
