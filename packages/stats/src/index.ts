@@ -1,13 +1,16 @@
 import {client} from "@core/redis";
 import {app} from "@core/api";
 import {status, statusLegacy} from "minecraft-server-util";
+import dotenv from "dotenv";
 
 import {startMonitoring} from "./utils/downtime";
 import {handle, resolveStatus} from "./utils/dataHandling";
 
+dotenv.config();
+
 export const startService = async () => {
     await client.connect();
-    app.listen(3000);
+    app.listen(process.env.LILO_PORT);
 
     let statusServers = null,
         offlineServers = null,

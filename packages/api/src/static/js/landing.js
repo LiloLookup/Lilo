@@ -1,7 +1,7 @@
 document.getElementsByClassName("server")[0].innerHTML = "Loading data...";
 
 let req = new XMLHttpRequest();
-req.open("GET", "http://localhost:3000/api/featuredServer", true);
+req.open("GET", "http://lilo.northernsi.de/api/featuredServer", true);
 
 req.onload = () => {
     const serverData = JSON.parse(req.responseText);
