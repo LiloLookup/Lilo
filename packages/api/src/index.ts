@@ -62,7 +62,7 @@ app.get("/server/:address/settings", async function (req: Request, res: Response
         return res.status(401).send(unauthorizedHTML);
 
     if (!await client.exists(`server:${req.params.address}${!req.params.address.includes(":") ? ":25565" : ""}`))
-        return res.status(401).send(notFoundHTML);
+        return res.status(404).send(notFoundHTML);
 
     return res.send(serverSettings);
 });

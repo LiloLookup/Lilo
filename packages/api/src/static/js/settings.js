@@ -41,6 +41,20 @@ function deleteServer() {
     deleteServerReq.setRequestHeader("Accept", "application/json");
     deleteServerReq.setRequestHeader("Content-Type", "application/json");
 
+    deleteServerReq.onload = () => {
+        switch (deleteServerReq.status) {
+            case 200:
+                window.location.href = "/admin";
+                break;
+            default:
+                alert("An error occurred.");
+                window.location.reload(false);
+                break;
+        }
+    };
+
+    deleteServerReq.onerror = onError;
+
     deleteServerReq.send(null);
 }
 
