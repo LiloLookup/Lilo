@@ -1,5 +1,5 @@
 let req = new XMLHttpRequest();
-req.open("POST",`${/[^/]*$/.exec(document.location.href)[0]}/blog/post`, true);
+req.open("POST", "/blog/post", true);
 req.setRequestHeader("Accept", "application/json");
 req.setRequestHeader("Content-Type", "application/json");
 

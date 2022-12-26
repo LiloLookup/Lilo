@@ -2,7 +2,7 @@ import {defaultServerIcon} from "@core/api";
 import {client} from "@core/redis";
 import {Request, Response} from "express";
 
-export const featuredServer = async (req: Request, res: Response) => {
+export const randomServer = async (req: Request, res: Response) => {
     const monitoredServers = JSON.parse(await client.get("status") || "[]"),
         selectedServer = monitoredServers[Math.floor(Math.random() * monitoredServers.length)],
         host = selectedServer.split(":")[0],

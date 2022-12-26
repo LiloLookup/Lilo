@@ -23,7 +23,26 @@ body {
     margin: 0;
 }
 
-.page {
+.delBtn {
+    border: 20px;
+    background-color: #f45f5f;
+    color: white;
+    border-radius: 5px;
+    position: relative;
+}
+
+.submitBtn {
+    border: 20px;
+    background-color: #6dd863;
+    color: white;
+    font-size: 15px;
+    border-radius: 5px;
+    position: relative;
+    width: 70px !important;
+    height: 35px !important;
+}
+
+.page:not(.serverlist) {
     color: white;
     text-align: center;
 
@@ -36,6 +55,18 @@ body {
     align-items: center;
 
     z-index: 9999;
+}
+
+.serverlist {
+    color: white;
+    text-align: center;
+
+    width: 100vw;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .title .header {
@@ -105,16 +136,20 @@ body {
     width: max-content;
 }
 
+.blog .container {
+    max-width: none;
+}
+
 a {
     text-decoration: none;
 }
 
 a:link {
-    color: unset;
+    color: #cfcfcf;
 }
 
 a:visited {
-    color: unset;
+    color: #cfcfcf;
 }
 
 a:hover {
@@ -193,4 +228,38 @@ a:active {
 hr {
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 5px;
+}
+
+#notification-toggle {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.toggleBtn-ENABLE {
+    border: 20px;
+    background-color: #6dd863;
+    padding: 5px;
+    color: white;
+    border-radius: 5px;
+    position: relative;
+}
+
+.toggleBtn-DISABLE {
+    border: 20px;
+    background-color: #f45f5f;
+    padding: 5px;
+    color: white;
+    border-radius: 5px;
+    position: relative;
+}
+
+.toggleBtn-gray {
+    border: 20px;
+    background-color: #141414;
+    padding: 5px;
+    color: white;
+    border-radius: 5px;
+    position: relative;
 }

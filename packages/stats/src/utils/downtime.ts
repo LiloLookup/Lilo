@@ -1,10 +1,8 @@
 import {client} from "@core/redis";
-import {hook} from "@core/app";
+import * as Notifications from "@core/notifications";
 import {status, statusLegacy} from "minecraft-server-util";
-import {MessageBuilder} from "discord-webhook-node";
 
 import {handle, saveData} from "./dataHandling";
-import {defaultServerIcon} from "@core/api";
 
 export const startMonitoring = async (host: string, port: number) => {
     let i = 0,
@@ -27,22 +25,8 @@ export const startMonitoring = async (host: string, port: number) => {
 
             if (i < 4) {
                 setTimeout(loop, 2000);
-            } else if (!offline) {
-                const noNotify = await client.hExists("no_notify", serverStr),
-                    wildcardNoNotify = await client.hExists("no_notify", `server:*.${host.substring(host.indexOf(".") + 1)}:${port}`);
-
-                if (noNotify || wildcardNoNotify)
-                    return;
-
-                const embed = new MessageBuilder()
-                    .setDescription(`${host}:${port} is experiencing packet losses...`)
-                    .setTimestamp();
-
-                await hook.send(embed);
-            } else {
-                const offlineServers = JSON.parse(await client.get("offline") || "[]"),
-                    noNotify = await client.hExists("no_notify", serverStr),
-                    wildcardNoNotify = await client.hExists("no_notify", `server:*.${host.substring(host.indexOf(".") + 1)}:${port}`);
+            } else if (offline) {
+                const offlineServers = JSON.parse(await client.get("offline") || "[]");
                 if (offlineServers.some(server => server.host == host && server.port == port))
                     return;
 
@@ -50,31 +34,29 @@ export const startMonitoring = async (host: string, port: number) => {
                 await client.set("offline", JSON.stringify(offlineServers));
 
                 await saveData(host, port, {players: {online: null, max: null}, roundTripLatency: null});
-                await client.hSet(`server:${host}:${port}`, "last_data", JSON.stringify(await client.hGet(`server:${host}:${port}`, "data")));
-                await client.hSet(`server:${host}:${port}`, "data", JSON.stringify({
-                    "motd": {
-                        "html": `<span style="color: #FF0000; font-weight: bold;">OFFLINE</span>`
+                await client.hSet(serverStr, "last_data", JSON.stringify(await client.hGet(serverStr, "data")));
+                await client.hSet(serverStr, "last_seen", Date.now());
+                await client.hSet(serverStr, "data", JSON.stringify({
+                    motd: {
+                        html: `<span style="color: #FF0000; font-weight: bold;">OFFLINE</span>`
                     },
-                    "favicon": defaultServerIcon,
-                    "players": {
-                        "online": 0,
-                        "max": 0,
+                    favicon: JSON.parse(await client.hGet(serverStr, "data")).favicon,
+                    players: {
+                        online: 0,
+                        max: 0,
                     },
-                    "roundTripLatency": -1,
-                    "version": {
-                        "name": "OFFLINE",
-                        "protocol": 0
+                    roundTripLatency: -1,
+                    version: {
+                        name: "OFFLINE",
+                        protocol: 0
                     }
                 }));
 
-                if (noNotify || wildcardNoNotify)
+                const notifications = JSON.parse(await client.get("notifications"));
+                if (!notifications.includes(`${host}:${port}`) && !notifications.includes(`*.${host}:${port}`))
                     return;
 
-                const embed = new MessageBuilder()
-                    .setDescription(`${host}:${port} went offline...`)
-                    .setTimestamp();
-
-                await hook.send(embed);
+                await Notifications.send(`${host}:${port} went offline...\nhttps://lilo.northernsi.de/server/${host}${port == 25565 ? "" : `:${port}`}`, true, {host: host, port: port});
             }
 
             i++;

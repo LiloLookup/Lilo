@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <title>{title}</title>
-    <link rel="stylesheet" href="../css/general.css" type="text/css">
-    <link rel="stylesheet" href="../css/blog.css" type="text/css">
+    <link rel="stylesheet" href="/css/general.css" type="text/css">
+    <link rel="stylesheet" href="/css/blog.css" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1">
     <link rel="icon" href="{favicon}">
 
@@ -22,7 +23,7 @@
     <meta property="og:image" content="https://lilo.northernsi.de/image/metabg.png">
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
+    <meta name="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://lilo.northernsi.de/">
     <meta property="twitter:title" content="{title}">
     <meta property="twitter:description"
@@ -41,14 +42,14 @@
     <div class="container text-align-left">
         <div class="title">
             <p class="header">{title}</p>
-            <p class="time"></p>
-            <script>document.querySelector(".time").innerText = "Fetching creation date...";</script>
-            <script type="text/javascript" src="../js/blog.js"></script>
-            <script>
-                convertTime({time});
-            </script>
-            <span>{message}</span>
         </div>
+        <p class="time"></p>
+        <script>document.querySelector(".time").innerText = "Fetching creation date...";</script>
+        <script type="text/javascript" src="/js/blog.js"></script>
+        <script>
+            convertTime({time});
+        </script>
+        <span>{message}</span>
     </div>
 </div>
 </body>

@@ -11,6 +11,9 @@
             "@core/stats": [
                 "../../packages/stats/src"
             ],
+            "@core/notifications": [
+                "../../packages/notifications/src"
+            ],
             "@core/app": [
                 "../../apps/lilo/src"
             ]

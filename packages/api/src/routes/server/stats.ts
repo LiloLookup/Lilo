@@ -10,10 +10,18 @@ export const serverStats = async (req: Request, res: Response) => {
     if (!serverStats)
         return res.status(404).send({"status": 404});
 
-    if (size > serverStats.length)
-        return res.send(serverStats);
-
     let result = [];
+    if (size > serverStats.length) {
+        for (let i = 1; i <= serverStats.length; i++) {
+            result.push({
+                time: serverStats[i - 1].time,
+                online: serverStats[i - 1].online
+            });
+        }
+
+        return res.send(serverStats);
+    }
+
     for (let i = 1; i <= size; i++) {
         result.push({
             time: serverStats[serverStats.length - (size + 1) + i].time,

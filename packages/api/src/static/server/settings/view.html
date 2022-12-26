@@ -4,6 +4,7 @@
     <title>Lilo - Quick Server Lookup</title>
     <link rel="stylesheet" href="/css/general.css" type="text/css">
     <link rel="stylesheet" href="/css/server.css" type="text/css">
+    <link rel="stylesheet" href="/css/blog.css" type="text/css">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1">
 
@@ -38,28 +39,16 @@
 </div>
 <div class="page">
     <div class="title">
-        <p class="header">Lilo</p>
-        <p class="subtitle">The only tool you'll ever need to search through a database containing thousands of
-            Minecraft servers</p>
-    </div>
-    <div class="bar" style="margin-bottom: 10px;">
-        <form
-            onsubmit="window.location.href = `/server/${document.getElementsByClassName('input')[0].value}`; return false;">
-            <div class="bar-input">
-                <input type="text" class="input" autocomplete="off" placeholder="Search for a server">
-            </div>
-            <script>
-                let input = document.getElementsByClassName("input")[0];
-                input.focus();
-            </script>
-        </form>
+        <p class="header">Admin Panel</p>
     </div>
     <div class="container">
-        <h3 style="margin: 0;">Random Server</h3>
-        <hr>
-        <div class="server"></div>
-        <script src="/js/landing.js"></script>
+        <div class="title">
+            <p class="header">Notifications</p>
+        </div>
+        <div id="notification-toggle"></div>
     </div>
+    <input onclick="deleteServer()" class="toggleBtn-DISABLE" type="button" value="Delete Server">
+    <script src="/js/settings.js"></script>
 </div>
 </body>
 </html>

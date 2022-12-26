@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Compare servers - Lilo</title>
+    <link rel="stylesheet" href="/css/general.css" type="text/css">
+    <link rel="stylesheet" href="/css/server.css" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1">
+
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="Lilo - Compare servers}">
+    <meta name="description"
+          content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://lilo.northernsi.de/">
+    <meta property="og:title" content="Lilo - Compare servers">
+    <meta property="og:description"
+          content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
+    <meta property="og:image" content="https://lilo.northernsi.de/image/metabg.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://lilo.northernsi.de/">
+    <meta property="twitter:title" content="Lilo - Compare servers">
+    <meta property="twitter:description"
+          content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
+    <meta property="twitter:image" content="https://lilo.northernsi.de/image/metabg.png">
+</head>
+<body>
+<div class="container-fluid landing-background">
+    <div class="pink-bg-bubble"></div>
+    <div class="yellow-bg-bubble"></div>
+    <div class="blue-bg-bubble"></div>
+    <div class="green-bg-bubble"></div>
+    <div class="purple-bg-bubble"></div>
+</div>
+<div class="page">
+    <div class="bar">
+        <form onsubmit="addServer(event);">
+            <div class="bar-input">
+                <input id="serverInput" type="text" class="input" autocomplete="off" placeholder="Add a server">
+            </div>
+            <script>
+                let input = document.getElementsByClassName("input")[0];
+                input.focus();
+            </script>
+        </form>
+    </div>
+    <div id="servers"></div>
+    <script>
+        let servers = [];
+        const inputObj = document.getElementById("serverInput");
+        const serversDiv = document.getElementById("servers");
+
+        function addServer(event) {
+            event.preventDefault();
+            if (servers.includes(document.getElementById("serverInput").value))
+                return;
+
+            servers.push(document.getElementById("serverInput").value);
+
+            const value = inputObj.value;
+
+            if (value == "")
+                return;
+
+            serversDiv.insertAdjacentHTML("afterbegin",
+                `<div class="server-entry ${value}">
+                <p>${value}</p>
+                <input class="${value} delBtn" onclick="deleteServer('${value}')" type="button" value="Delete">
+            </div>`);
+            inputObj.value = "";
+        }
+
+        inputObj.addEventListener("keypress", function (event) {
+            if (event.key == "Enter") {
+                addServer();
+            }
+        });
+
+        function deleteServer(server) {
+            document.getElementsByClassName(server)[0].innerHTML = "";
+            servers.splice(servers.indexOf(server), 1);
+        }
+
+        function redirect() {
+            let query = "/server/compare?s=";
+            for (let server in servers)
+                query += `${servers[server]},`;
+
+            document.location.href = query.slice(0, query.length - 1);
+        }
+    </script>
+    <input class="submitBtn" onclick="redirect();" type="button" value="Submit">
+</div>
+</body>
+</html>

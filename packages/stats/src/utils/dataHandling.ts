@@ -1,6 +1,5 @@
-import {hook} from "@core/app";
+import * as Notifications from "@core/notifications";
 import {client} from "@core/redis";
-import {MessageBuilder} from "discord-webhook-node";
 
 export const handle = async (host: string, port: number, statusResult: any) => {
     await client.hSet(`server:${host}:${port}`, "data", JSON.stringify(statusResult));
@@ -13,18 +12,11 @@ export async function resolveStatus(host: string, port: number, offlineServers: 
 
     await client.set("offline", JSON.stringify(offlineServers.filter(server => server.host != host || server.port != port)));
 
-    const noNotify = await client.hExists("no_notify", `server:${host}:${port}`),
-        wildcardNoNotify = await client.hExists("no_notify", `server:*.${host.match(/\./g).length >= 2
-            ? host.substring(host.indexOf(".") + 1) : host}:${port}`);
-
-    if (noNotify || wildcardNoNotify)
+    const notifications = JSON.parse(await client.get("notifications"));
+    if (!notifications.includes(`${host}:${port}`) && !notifications.includes(`*.${host}:${port}`))
         return;
 
-    const embed = new MessageBuilder()
-        .setDescription(`${host}:${port} is back online...`)
-        .setTimestamp();
-
-    await hook.send(embed);
+    await Notifications.send(`${host}:${port} is back online!\nhttps://lilo.northernsi.de/server/${host}${port == 25565 ? "" : `:${port}`}`, true, {host: host, port: port});
 }
 
 export const saveData = async (host: string, port: number, rawData: any) => {

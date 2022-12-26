@@ -1,0 +1,10 @@
+.server {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+span {
+    line-break: anywhere;
+}

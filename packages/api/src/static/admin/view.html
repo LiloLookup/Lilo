@@ -1,36 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>{server_name} - Lilo</title>
-    <link rel="stylesheet" href="../css/general.css" type="text/css">
-    <link rel="stylesheet" href="../css/server.css" type="text/css">
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <title>Lilo - Quick Server Lookup</title>
+    <link rel="stylesheet" href="/css/general.css" type="text/css">
+    <link rel="stylesheet" href="/css/server.css" type="text/css">
+    <link rel="stylesheet" href="/css/blog.css" type="text/css">
+    <script src="/js/admin.js"></script>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1">
-    <link rel="icon" href="{favicon}">
 
     <!-- Primary Meta Tags -->
-    <meta name="title" content="Lilo - {server_name}">
+    <meta name="title" content="Lilo - Quick Server Lookup">
     <meta name="description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://lilo.northernsi.de/">
-    <meta property="og:title" content="Lilo - {server_name}">
+    <meta property="og:title" content="Lilo - Quick Server Lookup">
     <meta property="og:description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
     <meta property="og:image" content="https://lilo.northernsi.de/image/metabg.png">
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
+    <meta name="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://lilo.northernsi.de/">
-    <meta property="twitter:title" content="Lilo - {server_name}">
+    <meta property="twitter:title" content="Lilo - Quick Server Lookup">
     <meta property="twitter:description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
     <meta property="twitter:image" content="https://lilo.northernsi.de/image/metabg.png">
 </head>
 <body>
-<div class="container-fluid landing-background">
+<div class="general-background">
     <div class="pink-bg-bubble"></div>
     <div class="yellow-bg-bubble"></div>
     <div class="blue-bg-bubble"></div>
@@ -38,17 +39,21 @@
     <div class="purple-bg-bubble"></div>
 </div>
 <div class="page">
-    <div class="bar">
-        <form
-            onsubmit="window.location.href = `/server/${document.getElementsByClassName('input')[0].value}`; return false;">
+    <div class="title">
+        <p class="header">Admin Panel</p>
+    </div>
+    <div class="container">
+        <div class="title">
+            <p class="header">View Server Settings</p>
+        </div>
+        <div class="bar" style="margin-bottom: 10px;">
             <div class="bar-input">
-                <input type="text" class="input" autocomplete="off" placeholder="Search for a server">
+                <form
+                    onsubmit="window.location.href = `/server/${document.getElementById('serverInput').value}/settings`; return false;">
+                    <input id="serverInput" type="text" class="input" autocomplete="off" placeholder="example.com">
+                </form>
             </div>
-            <script>
-                let input = document.getElementsByClassName("input")[0];
-                input.focus();
-            </script>
-        </form>
+        </div>
     </div>
 </div>
 </body>

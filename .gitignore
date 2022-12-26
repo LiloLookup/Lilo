@@ -2,15 +2,13 @@
 node_modules/
 bun.lockb
 package-lock.json
+dump.rdb
 
 # Credentials
 .env
 
 # macOS
 **/.DS_Store
-
-# Launcher
-!launcher.js
 
 # Compiled TypeScript
 *.js
