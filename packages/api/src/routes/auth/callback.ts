@@ -20,12 +20,13 @@ export const callback = async (req: any, res: any): Promise<any> => {
             client_secret: process.env.DISCORD_OAUTH_CLIENT_SECRET,
             grant_type: "authorization_code",
             code: code,
-            redirect_uri: `https://${req.headers.host}/auth/callback`
+            redirect_uri: `http://${req.headers.host}/auth/callback`
         });
 
         const response = await Axios.post("https://discord.com/api/v8/oauth2/token", formData.toString(), {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
+                "Accept-Encoding": "gzip"
             }
         });
 
@@ -36,6 +37,7 @@ export const callback = async (req: any, res: any): Promise<any> => {
         const userResponse = await Axios.get("https://discord.com/api/v8/users/@me", {
             headers: {
                 Authorization: `Bearer ${access_token}`,
+                "Accept-Encoding": "gzip"
             },
         });
 
