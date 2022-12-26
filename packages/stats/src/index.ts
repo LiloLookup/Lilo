@@ -42,7 +42,7 @@ export const startService = async () => {
                         return await client.del(`server:${host}${port}`);
                     }
 
-                    await saveData(host, port, {online: 0, rtt: -1});
+                    await saveData(host, port, {players: {online: 0, max: 0}, roundTripLatency: -1});
                     await startMonitoring(host, port);
                 });
             });

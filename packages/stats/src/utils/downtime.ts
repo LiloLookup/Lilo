@@ -33,7 +33,7 @@ export const startMonitoring = async (host: string, port: number) => {
                 offlineServers.push({"host": host, "port": port});
                 await client.set("offline", JSON.stringify(offlineServers));
 
-                await saveData(host, port, {players: {online: null, max: null}, roundTripLatency: null});
+                await saveData(host, port, {players: {online: 0, max: 0}, roundTripLatency: -1});
                 await client.hSet(serverStr, "last_data", JSON.stringify(await client.hGet(serverStr, "data")));
                 await client.hSet(serverStr, "last_seen", Date.now());
                 await client.hSet(serverStr, "data", JSON.stringify({
@@ -56,7 +56,10 @@ export const startMonitoring = async (host: string, port: number) => {
                 if (!notifications.includes(`${host}:${port}`) && !notifications.includes(`*.${host}:${port}`))
                     return;
 
-                await Notifications.send(`${host}:${port} went offline...\nhttps://lilo.northernsi.de/server/${host}${port == 25565 ? "" : `:${port}`}`, true, {host: host, port: port});
+                await Notifications.send(`${host}:${port} went offline...\nhttps://lilo.northernsi.de/server/${host}${port == 25565 ? "" : `:${port}`}`, true, {
+                    host: host,
+                    port: port
+                });
             }
 
             i++;
