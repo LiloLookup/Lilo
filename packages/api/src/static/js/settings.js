@@ -60,7 +60,7 @@ function deleteServer() {
                 break;
             default:
                 alert("An error occurred.");
-                //window.location.reload(false);
+                window.location.reload(false);
                 break;
         }
     };
@@ -77,12 +77,12 @@ function onLoad(req) {
             break;
         default:
             alert("An error occurred.");
-            //window.location.reload(false);
+            window.location.reload(false);
             break;
     }
 }
 
 function onError() {
     alert("An error occurred.");
-    //window.location.reload(false);
+    window.location.reload(false);
 }
