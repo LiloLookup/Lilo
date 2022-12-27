@@ -1,5 +1,17 @@
+function getCookie(cookieName) {
+    cookieName += "=";
+    const cookiesArray = document.cookie.split(';');
+    for (let cookie in cookiesArray) {
+        let loopedCookie = cookiesArray[cookie].trim();
+        if (loopedCookie.indexOf(cookieName) === 0)
+            return loopedCookie.substring(cookieName.length);
+    }
+
+    return [];
+}
+
 let req = new XMLHttpRequest();
-req.open("POST", "/blog/post", true);
+req.open("POST", `/blog/post/${getCookie("access_token")}`, true);
 req.setRequestHeader("Accept", "application/json");
 req.setRequestHeader("Content-Type", "application/json");
 

@@ -2,7 +2,14 @@ import {client} from "@core/redis";
 import {Request, Response} from "express";
 
 export const notifications = async (req: Request, res: Response) => {
-    if (!req.params.address || !req.body.action)
+    if (!req.params.address || !req.params.token || !req.cookies.id || !req.body.action)
+        return res.send({"status": 400});
+
+    if (!JSON.parse(await client.hGet(`discord:${req.cookies.id}`, "access_tokens"))
+        .some(accessObj => accessObj.accessToken == req.cookies.access_token))
+        return res.send({"status": 401});
+
+    if (!await client.exists(`server:${req.params.address}${!req.params.address.includes(":") ? ":25565" : ""}`))
         return res.send({"status": 404});
 
     const notifications = JSON.parse(await client.get("notifications") || "[]");

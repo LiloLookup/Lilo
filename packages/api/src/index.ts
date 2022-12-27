@@ -67,22 +67,18 @@ app.get("/server/:address/settings", async function (req: Request, res: Response
     return res.send(serverSettings);
 });
 
-app.post("/server/:address/notifications", Express.json(), async function (req: Request, res: Response) {
+app.post("/server/:address/notifications/:token", Express.json(), async function (req: Request, res: Response) {
     if (!await isLoggedIn(req))
         return res.status(401).send(unauthorizedHTML);
 
     await notifications(req, res);
 });
 
-app.delete("/server/:address/delete", Express.json(), async function (req: Request, res: Response) {
+app.delete("/server/:address/delete/:token", Express.json(), async function (req: Request, res: Response) {
     if (!await isLoggedIn(req))
         return res.status(401).send(unauthorizedHTML);
 
     await deleteServer(req, res);
-});
-
-app.get("/blog/:id", async function (req: Request, res: Response) {
-    await viewBlog(req, res);
 });
 
 app.get("/blog/create", async function (req: Request, res: Response) {
@@ -92,11 +88,15 @@ app.get("/blog/create", async function (req: Request, res: Response) {
     return res.send(createBlogHTML);
 });
 
-app.post("/blog/post", Express.json(), async function (req: Request, res: Response) {
+app.post("/blog/post/:token", Express.json(), async function (req: Request, res: Response) {
     if (!await isLoggedIn(req))
         return res.status(401).send(unauthorizedHTML);
 
     await postBlog(req, res);
+});
+
+app.get("/blog/:id", async function (req: Request, res: Response) {
+    await viewBlog(req, res);
 });
 
 app.get("/stats", async function (req: Request, res: Response) {
@@ -115,12 +115,6 @@ app.get("/auth/login", async function (req: Request, res: Response) {
 });
 
 app.get("/auth/logout", async function (req: Request, res: Response) {
-    if (!req.cookies.id || !req.cookies.access_token)
-        return res.status(401).send(unauthorizedHTML);
-
-    if (!await client.exists(`discord:${req.cookies.id}`))
-        return res.status(404).send(notFoundHTML);
-
     res.cookie("id", "", {maxAge: 0});
     res.cookie("access_token", "", {maxAge: 0});
     res.redirect("/");
