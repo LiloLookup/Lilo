@@ -59,4 +59,4 @@ After you have added this entry and modified it with the correct values, you can
 should now be available on your specified address.
 
 <h3 id="special-thanks">› Special thanks</h3>
-<a href="https://github.com/unordentlich">@unordentlich</a> for the wonderful CSS/design
+<a href="https://github.com/unordentlich">@unordentlich</a> for the wonderful CSS & OpenSearch contribution
