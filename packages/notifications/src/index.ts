@@ -21,6 +21,8 @@ Twitter.get("account/verify_credentials", {
 }, onAuthenticated);
 
 export async function send(message, twitter, options = {host: null, port: null}) {
+    console.log(message);
+    
     const embed = new MessageBuilder()
         .setDescription(message)
         .setTimestamp();

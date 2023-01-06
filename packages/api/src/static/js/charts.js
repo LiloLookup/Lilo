@@ -8,11 +8,12 @@ let req = new XMLHttpRequest(),
             data: [1, 2, 3, 5]
         }],
         chart: {
+            id: " ",
             animations: {
                 enabled: false
             },
-            height: 300,
-            width: 400,
+            height: "150%",
+            width: "100%",
             type: "area",
             foreColor: "#fff"
         },

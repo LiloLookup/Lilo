@@ -11,7 +11,7 @@ req.onload = () => {
         serversArray.push(`
         <a href="/server/${serverData[server].server_name}">
             <div class="favicon">
-                <img src="${serverData[server].favicon}" width="64px" alt="Server Favicon">
+                <img src="${serverData[server].favicon}" width="64px" height="64px" alt="Server Favicon">
             </div>
             <div class="align-right">
                 <div class="server-header">

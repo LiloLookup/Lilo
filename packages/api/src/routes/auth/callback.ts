@@ -20,7 +20,7 @@ export const callback = async (req: any, res: any): Promise<any> => {
             client_secret: process.env.DISCORD_OAUTH_CLIENT_SECRET,
             grant_type: "authorization_code",
             code: code,
-            redirect_uri: `http://${req.headers.host}/auth/callback`
+            redirect_uri: `https://${req.headers.host}/auth/callback`
         });
 
         const response = await Axios.post("https://discord.com/api/v8/oauth2/token", formData.toString(), {

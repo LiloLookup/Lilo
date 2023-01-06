@@ -9,7 +9,7 @@ req.onload = () => {
     let serverHTML = `
         <div onclick="document.location.href = '/server/${serverData.server_name}'" style="cursor: pointer;">
             <div class="favicon">
-                <img src="${serverData.favicon}" width="64px" alt="Server Favicon">
+                <img src="${serverData.favicon}" width="64px" height="64px" alt="Server Favicon">
             </div>
             <div class="align-right">
                 <div class="server-header">

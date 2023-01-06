@@ -11,6 +11,7 @@ function getCookie(cookieName) {
 }
 
 document.getElementById("notification-toggle").innerHTML = `<input class="toggleBtn-gray" type="button" value="Loading...">`;
+document.getElementById("public-toggle").innerHTML = `<input class="toggleBtn-gray" type="button" value="Loading...">`;
 const infoReq = new XMLHttpRequest(),
     address = document.location.href.split("/")[document.location.href.split("/").length - 2];
 infoReq.open("GET", `/server/${address}/info`, true);
@@ -18,8 +19,10 @@ infoReq.open("GET", `/server/${address}/info`, true);
 infoReq.onload = () => {
     switch (infoReq.status) {
         case 200:
-            const toggle = (JSON.parse(infoReq.responseText).notifications ? "Disable" : "Enable");
-            document.getElementById("notification-toggle").innerHTML = `<input class="toggleBtn-${toggle.toUpperCase()}" onclick="notifications('${toggle.toUpperCase()}')" type="button" value="${toggle}">`;
+            const nToggle = (JSON.parse(infoReq.responseText).notifications ? "Disable" : "Enable"),
+                pToggle = (JSON.parse(infoReq.responseText).public ? "Disable" : "Enable");
+            document.getElementById("notification-toggle").innerHTML = `<input class="toggleBtn-${nToggle.toUpperCase()}" onclick="notifications('${nToggle.toUpperCase()}')" type="button" value="${nToggle}">`;
+            document.getElementById("public-toggle").innerHTML = `<input class="toggleBtn-${pToggle.toUpperCase()}" onclick="publish('${pToggle.toUpperCase()}')" type="button" value="${pToggle}">`;
             break;
         default:
             alert("An error occurred.");
@@ -47,7 +50,47 @@ function notifications(action) {
     }));
 }
 
+function publish(action) {
+    const publishReq = new XMLHttpRequest();
+    publishReq.open("POST", `/server/${address}/visibility/${getCookie("access_token")}`, true);
+    publishReq.setRequestHeader("Accept", "application/json");
+    publishReq.setRequestHeader("Content-Type", "application/json");
+
+    publishReq.onload = () => {
+        onLoad(publishReq);
+    };
+
+    publishReq.onerror = onError;
+
+    publishReq.send(JSON.stringify({
+        action: action
+    }));
+}
+
+function mirror(action, address, origin) {
+    const mirrorReq = new XMLHttpRequest();
+    mirrorReq.open("POST", `/server/${address}/mirror/${getCookie("access_token")}`, true);
+    mirrorReq.setRequestHeader("Accept", "application/json");
+    mirrorReq.setRequestHeader("Content-Type", "application/json");
+
+    mirrorReq.onload = () => {
+        onLoad(mirrorReq);
+    };
+
+    mirrorReq.onerror = onError;
+
+    mirrorReq.send(JSON.stringify({
+        action: action,
+        address: address,
+        origin: origin
+    }));
+}
+
 function deleteServer() {
+    const hasConfirmed = confirm("Are you sure you want to delete this server entirely from the database?");
+    if (!hasConfirmed)
+        return;
+
     const deleteServerReq = new XMLHttpRequest();
     deleteServerReq.open("DELETE", `/server/${address}/delete/${getCookie("access_token")}`, true);
     deleteServerReq.setRequestHeader("Accept", "application/json");

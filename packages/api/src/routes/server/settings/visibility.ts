@@ -2,7 +2,7 @@ import {client} from "@core/redis";
 import {Request, Response} from "express";
 import {srvOrigin} from "@core/stats";
 
-export const notifications = async (req: Request, res: Response) => {
+export const visibility = async (req: Request, res: Response) => {
     if (!req.params.address || !req.params.token || !req.cookies.id || !req.body.action)
         return res.status(400).send({status: 400});
 
@@ -17,17 +17,17 @@ export const notifications = async (req: Request, res: Response) => {
     if (!await client.exists(`server:${srvStr}`))
         return res.status(404).send({status: 404});
 
-    const notifications = JSON.parse(await client.get("notifications") || "[]");
+    const publicServers = JSON.parse(await client.get("public") || "[]");
     switch (req.body.action) {
         case "ENABLE":
-            notifications.push(srvStr);
-            await client.set("notifications", JSON.stringify(notifications));
+            publicServers.push(srvStr);
+            await client.set("public", JSON.stringify(publicServers));
             break;
         case "DISABLE":
-            notifications.splice(notifications.indexOf(srvStr), 1);
-            if (notifications.length == 0)
-                return await client.del("notifications");
-            await client.set("notifications", JSON.stringify(notifications));
+            publicServers.splice(publicServers.indexOf(srvStr), 1);
+            if (publicServers.length == 0)
+                return await client.del("public");
+            await client.set("public", JSON.stringify(publicServers));
             break;
         default:
             return res.status(400).send({status: 400});

@@ -1,5 +1,6 @@
 import {client} from "@core/redis";
 import Express, {Request, Response} from "express";
+import rateLimit from "express-rate-limit";
 import Cookies from "cookie-parser";
 import dotenv from "dotenv";
 import FS from "node:fs";
@@ -14,10 +15,12 @@ import {postBlog} from "./routes/blog/post";
 import {callback} from "./routes/auth/callback";
 import {globalStats} from "./routes/stats/stats";
 import {randomServer} from "./routes/server/random";
-import {serverlist} from "./routes/serverlist/serverlist";
+import {notifications} from "./routes/server/settings/notifications";
 import {deleteServer} from "./routes/server/settings/delete";
 import {serverInfo} from "./routes/server/info";
-import {notifications} from "./routes/server/settings/notifications";
+import {visibility} from "./routes/server/settings/visibility";
+import {srvOrigin} from "@core/stats";
+import {mirror} from "./routes/server/settings/mirror";
 
 dotenv.config();
 
@@ -25,11 +28,24 @@ export const defaultServerIcon = process.env.DEFAULT_SERVER_ICON,
     unauthorizedHTML = FS.readFileSync(`${__dirname}/static/401.html`, "utf-8").replace(/{favicon}/g, defaultServerIcon),
     notFoundHTML = FS.readFileSync(`${__dirname}/static/404.html`, "utf-8").replace(/{favicon}/g, defaultServerIcon),
     internalServerErrorHTML = FS.readFileSync(`${__dirname}/static/500.html`, "utf-8").replace(/{favicon}/g, defaultServerIcon),
-    compareHTML = FS.readFileSync(`${__dirname}/static/server/compare/index.html`, "utf-8"),
     comparingHTML = FS.readFileSync(`${__dirname}/static/server/compare/view.html`, "utf-8"),
     createBlogHTML = FS.readFileSync(`${__dirname}/static/blog/create.html`, "utf-8"),
     adminHTML = FS.readFileSync(`${__dirname}/static/admin/view.html`, "utf-8"),
     serverSettings = FS.readFileSync(`${__dirname}/static/server/settings/view.html`, "utf-8");
+
+const limiter = rateLimit({
+    windowMs: 5 * 60 * 1000,
+    max: 250,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: {
+        status: 429,
+        message: "Too Many Requests"
+    }
+});
+
+app.use(limiter);
+app.set("trust proxy", process.env.PROXY_COUNT);
 
 app.get("*/view.html", async function (req: Request, res: Response) {
     return res.status(404).send(notFoundHTML);
@@ -37,7 +53,7 @@ app.get("*/view.html", async function (req: Request, res: Response) {
 
 app.get("/server/compare", async function (req: Request, res: Response) {
     if (!req.query.s)
-        return res.send(compareHTML);
+        return res.send(FS.readFileSync(`${__dirname}/static/server/compare/index.html`, "utf-8"));
     else
         return res.send(comparingHTML);
 });
@@ -61,10 +77,26 @@ app.get("/server/:address/settings", async function (req: Request, res: Response
     if (!await isLoggedIn(req))
         return res.status(401).send(unauthorizedHTML);
 
-    if (!await client.exists(`server:${req.params.address}${!req.params.address.includes(":") ? ":25565" : ""}`))
+    const host = req.params.address,
+        port = (!req.params.address.includes(":") ? 25565 : parseInt(req.params.address.split(":")[1])),
+        srvStr = await srvOrigin(host, port);
+
+    if (!await client.hExists(`server:${srvStr}`, "data"))
         return res.status(404).send(notFoundHTML);
 
-    return res.send(serverSettings);
+    let serverData = JSON.parse(await client.hGet(`server:${srvStr}`, "data")),
+        serverHTML = serverSettings;
+
+    serverHTML = serverHTML.replace(/{server_name}/g, `${host}:${port}`);
+    serverHTML = serverHTML.replace(/{motd}/g, !serverData.motd.html ? serverData.motd : serverData.motd.html.replace(/\n/g, "<br>"));
+    serverHTML = serverHTML.replace(/{favicon}/g, serverData.favicon ? serverData.favicon : defaultServerIcon);
+    serverHTML = serverHTML.replace(/{latency}/g, !serverData.roundTripLatency ? "0ms" : `${serverData.roundTripLatency}ms`);
+    serverHTML = serverHTML.replace(/{version}/g, !serverData.version.name ? serverData.version.replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        : serverData.version.name.replace(/</g, "&lt;").replace(/>/g, "&gt;"));
+    serverHTML = serverHTML.replace(/{version_number}/g, !serverData.version.protocol ? "" : ` (${serverData.version.protocol})`);
+    serverHTML = serverHTML.replace(/{player_count}/g, !serverData.players ? "0/0" : `${serverData.players.online}/${serverData.players.max}`);
+
+    return res.send(serverHTML);
 });
 
 app.post("/server/:address/notifications/:token", Express.json(), async function (req: Request, res: Response) {
@@ -72,6 +104,20 @@ app.post("/server/:address/notifications/:token", Express.json(), async function
         return res.status(401).send(unauthorizedHTML);
 
     await notifications(req, res);
+});
+
+app.post("/server/:address/visibility/:token", Express.json(), async function (req: Request, res: Response) {
+    if (!await isLoggedIn(req))
+        return res.status(401).send(unauthorizedHTML);
+
+    await visibility(req, res);
+});
+
+app.post("/server/:address/mirror/:token", Express.json(), async function (req: Request, res: Response) {
+    if (!await isLoggedIn(req))
+        return res.status(401).send(unauthorizedHTML);
+
+    await mirror(req, res);
 });
 
 app.delete("/server/:address/delete/:token", Express.json(), async function (req: Request, res: Response) {
@@ -126,10 +172,6 @@ app.get("/auth/callback", async function (req: Request, res: Response) {
 
 app.get("/api/server/random", async function (req: Request, res: Response) {
     await randomServer(req, res);
-});
-
-app.get("/api/servers", async function (req: Request, res: Response) {
-    await serverlist(req, res)
 });
 
 app.get("*", async function (req: Request, res: Response) {
