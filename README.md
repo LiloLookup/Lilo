@@ -1,11 +1,6 @@
 <h1 align="center">
     Welcome to Lilo 💻
 </h1>
-<pre align="center">
-    This document will introduce you to Lilo's functionalities and use case.
-    You'll also learn how to install and use Lilo as a Minecraft: Java Edition server tracking tool!
-</pre>
-<hr>
 <h3>Navigation</h3>
 <pre>
     <a href="#what-is-ebio-backend">› What is Lilo?</a>
@@ -58,5 +53,9 @@ server {
 After you have added this entry and modified it with the correct values, you can reload/restart your Nginx server. Lilo
 should now be available on your specified address.
 
-<h3 id="special-thanks">› Special thanks</h3>
-<a href="https://github.com/unordentlich">@unordentlich</a> for the wonderful CSS & OpenSearch contribution
+<h3 id="special-thanks">› Special thanks to...</h3>
+<a href="https://github.com/unordentlich">@unordentlich</a> for the wonderful CSS & general contribution
+<br>
+<a href="https://github.com/DevMoritz">@DevMoritz</a> for the auto update feature
+<br>
+<a href="https://github.com/Duckulus">@Duckulus</a> for the main idea
