@@ -1,9 +1,9 @@
 let serversQuery = new URLSearchParams(window.location.search).get("s").split(",");
 let filteredQuery = serversQuery.filter((item, index) => serversQuery.indexOf(item) === index);
 let queryString = "";
+
 for (let server in filteredQuery)
     queryString += `${filteredQuery[server]},`;
-
 
 document.querySelector("#chart").innerHTML = "Loading data...";
 
