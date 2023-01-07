@@ -59,3 +59,5 @@ should now be available on your specified address.
 <a href="https://github.com/DevMoritz">@DevMoritz</a> for the auto update feature
 <br>
 <a href="https://github.com/Duckulus">@Duckulus</a> for the main idea
+<br>
+<a href="https://github.com/l3nnartt">@l3nnartt</a> for awesome feedback regarding features & their implementations as well as ideas
