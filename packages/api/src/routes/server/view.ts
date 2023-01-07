@@ -1,5 +1,5 @@
 import {defaultServerIcon, notFoundHTML} from "@core/api";
-import {client} from "@core/redis";
+import {kvb} from "@core/app";
 import {Request, Response} from "express";
 import {status, statusLegacy} from "minecraft-server-util";
 import FS from "node:fs";
@@ -12,14 +12,14 @@ export const viewServer = async (req: Request, res: Response) => {
         return res.status(404).send(notFoundHTML);
 
     let host = req.params.address.split(":")[0].toLowerCase(),
-        aliases = JSON.parse(await client.get("aliases") || "[]"),
+        aliases = JSON.parse(await kvb.get("aliases") || "[]"),
         serverData;
 
     if (aliases.some(alias => alias.topLevel == `${host}:${port}`)) {
-        serverData = JSON.parse(await client.hGet(`server:${aliases
+        serverData = JSON.parse(await kvb.hGet(`server:${aliases
             .filter(alias => alias.topLevel == `${host}:${port}`)[0].lowLevel}`, "data"));
     } else {
-        serverData = JSON.parse(await client.hGet(`server:${host}:${port}`, "data"));
+        serverData = JSON.parse(await kvb.hGet(`server:${host}:${port}`, "data"));
         await handleSrv();
     }
 
@@ -31,14 +31,14 @@ export const viewServer = async (req: Request, res: Response) => {
         serverData = statusResult;
 
         await handleSrv();
-        await client.hSet(serverStr, "data", JSON.stringify(statusResult));
+        await kvb.hSet(serverStr, "data", JSON.stringify(statusResult));
         return await displayHTML();
     }).catch(async () => {
         statusLegacy(host, port, {timeout: 5000, enableSRV: true}).then(async (statusLegacyResult) => {
             serverData = statusLegacyResult;
 
             await handleSrv();
-            await client.hSet(serverStr, "data", JSON.stringify(statusLegacyResult));
+            await kvb.hSet(serverStr, "data", JSON.stringify(statusLegacyResult));
             return await displayHTML();
         }).catch(() => {
             return res.status(404).send(notFoundHTML);
@@ -55,21 +55,21 @@ export const viewServer = async (req: Request, res: Response) => {
                 lowLevel: `${serverData.srvRecord.host}:${serverData.srvRecord.port}`
             });
 
-            await client.set("aliases", JSON.stringify(aliases));
+            await kvb.set("aliases", JSON.stringify(aliases));
         }
     }
 
     async function displayHTML() {
-        let statusServers = JSON.parse(await client.get("status") || "[]"),
+        let statusServers = JSON.parse(await kvb.get("status") || "[]"),
             serverHTML = FS.readFileSync(`${__dirname}/../../static/server/view.html`, "utf-8"),
             serverStr = await srvOrigin(host, port);
 
         if (!statusServers.includes(serverStr)) {
             statusServers.push(serverStr);
-            await client.set("status", JSON.stringify(statusServers));
+            await kvb.set("status", JSON.stringify(statusServers));
         }
 
-        const alias = JSON.parse(await client.get("aliases")).filter(alias => alias.lowLevel == serverStr)[0];
+        const alias = JSON.parse(await kvb.get("aliases")).filter(alias => alias.lowLevel == serverStr)[0];
 
         serverHTML = serverHTML.replace(/{server_name}/g, (alias ? alias.topLevel.replace(":25565", "")
             : `${host}${(port == 25565 ? "" : `:${port}`)}`));

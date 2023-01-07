@@ -1,4 +1,4 @@
-import {client} from "@core/redis";
+import {kvb} from "@core/app";
 import Express, {Request, Response} from "express";
 import rateLimit from "express-rate-limit";
 import Cookies from "cookie-parser";
@@ -81,10 +81,10 @@ app.get("/server/:address/settings", async function (req: Request, res: Response
         port = (!req.params.address.includes(":") ? 25565 : parseInt(req.params.address.split(":")[1])),
         srvStr = await srvOrigin(host, port);
 
-    if (!await client.hExists(`server:${srvStr}`, "data"))
+    if (!await kvb.hExists(`server:${srvStr}`, "data"))
         return res.status(404).send(notFoundHTML);
 
-    let serverData = JSON.parse(await client.hGet(`server:${srvStr}`, "data")),
+    let serverData = JSON.parse(await kvb.hGet(`server:${srvStr}`, "data")),
         serverHTML = serverSettings;
 
     serverHTML = serverHTML.replace(/{server_name}/g, `${host}:${port}`);
@@ -185,6 +185,6 @@ export async function isLoggedIn(req) {
     const id = req.cookies.id,
         access_token = req.cookies.access_token;
 
-    const accessTokens = JSON.parse(await client.hGet(`discord:${id}`, "access_tokens") || "[]");
+    const accessTokens = JSON.parse(await kvb.hGet(`discord:${id}`, "access_tokens") || "[]");
     return accessTokens.some(token => token.accessToken == access_token);
 }

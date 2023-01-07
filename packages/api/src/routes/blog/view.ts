@@ -1,11 +1,11 @@
 import {notFoundHTML} from "@core/api";
-import {client} from "@core/redis";
+import {kvb} from "@core/app";
 import {Request, Response} from "express";
 import FS from "node:fs";
 
 export const viewBlog = async (req: Request, res: Response) => {
     const id = req.params.id;
-    const blog = JSON.parse(await client.get(`blog:${id}`));
+    const blog = JSON.parse(await kvb.get(`blog:${id}`));
 
     if (!blog)
         return res.status(404).send(notFoundHTML);

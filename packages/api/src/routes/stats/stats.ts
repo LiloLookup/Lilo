@@ -1,14 +1,14 @@
 import {internalServerErrorHTML} from "@core/api";
-import {client} from "@core/redis";
+import {kvb} from "@core/app";
 import {Request, Response} from "express";
 import FS from "node:fs";
 
 export const globalStats = async (req: Request, res: Response) => {
-    const servers = await client.keys("server:*"),
-        monitoredServers = JSON.parse(await client.get("status") || "[]"),
-        offlineServers = JSON.parse(await client.get("offline") || "[]"),
-        blogPosts = await client.keys("blog:*"),
-        registeredUsers = await client.keys("discord:[^admins]*");
+    const servers = await kvb.keys("server:*"),
+        monitoredServers = JSON.parse(await kvb.get("status") || "[]"),
+        offlineServers = JSON.parse(await kvb.get("offline") || "[]"),
+        blogPosts = await kvb.keys("blog:*"),
+        registeredUsers = await kvb.keys("discord:[^admins]*");
 
     if (!servers || !monitoredServers || !offlineServers || !blogPosts || !registeredUsers)
         return res.status(500).send(internalServerErrorHTML);

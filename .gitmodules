@@ -1,0 +1,3 @@
+[submodule "packages/kvb"]
+	path = packages/kvb
+	url = https://github.com/LiloLookup/kvb

@@ -22,7 +22,7 @@ Twitter.get("account/verify_credentials", {
 
 export async function send(message, twitter, options = {host: null, port: null}) {
     console.log(message);
-    
+
     const embed = new MessageBuilder()
         .setDescription(message)
         .setTimestamp();
@@ -35,7 +35,7 @@ export async function send(message, twitter, options = {host: null, port: null})
         });
 }
 
-function onAuthenticated(err, res) {
+function onAuthenticated(err, _res) {
     if (err) throw err;
     console.log("[Twitter] Authenticated.");
 }

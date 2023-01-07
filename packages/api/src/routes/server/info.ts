@@ -1,4 +1,4 @@
-import {client} from "@core/redis";
+import {kvb} from "@core/app";
 import {Request, Response} from "express";
 import {srvOrigin} from "@core/stats";
 
@@ -7,7 +7,7 @@ export const serverInfo = async (req: Request, res: Response) => {
         port = parseInt(req.params.address.split(":")[1]) || 25565;
 
     return res.send({
-        notifications: JSON.parse(await client.get("notifications") || "[]").includes(await srvOrigin(host, port)),
-        public: JSON.parse(await client.get("public") || "[]").includes(await srvOrigin(host, port))
+        notifications: JSON.parse(await kvb.get("notifications") || "[]").includes(await srvOrigin(host, port)),
+        public: JSON.parse(await kvb.get("public") || "[]").includes(await srvOrigin(host, port))
     });
 }

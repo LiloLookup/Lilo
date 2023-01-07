@@ -1,15 +1,15 @@
 import {defaultServerIcon} from "@core/api";
-import {client} from "@core/redis";
+import {kvb} from "@core/app";
 import {Request, Response} from "express";
 import * as Crypto from "node:crypto";
 
 export const randomServer = async (req: Request, res: Response) => {
-    const publicServers = JSON.parse(await client.get("public") || `["mc.hypixel.net:25565"]`),
+    const publicServers = JSON.parse(await kvb.get("public") || `["mc.hypixel.net:25565"]`),
         selectedServer = publicServers[Crypto.randomInt(0, publicServers.length)],
         host = selectedServer.split(":")[0],
         port = selectedServer.split(":")[1],
-        serverData = JSON.parse(await client.hGet(`server:${selectedServer}`, "data")),
-        alias = JSON.parse(await client.get("aliases") || "[]").filter(alias => alias.lowLevel == `${host}:${port}`)[0];
+        serverData = JSON.parse(await kvb.hGet(`server:${selectedServer}`, "data")),
+        alias = JSON.parse(await kvb.get("aliases") || "[]").filter(alias => alias.lowLevel == `${host}:${port}`)[0];
 
     if (!serverData)
         return res.status(404).send({status: 404});

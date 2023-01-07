@@ -1,5 +1,5 @@
 import {internalServerErrorHTML, unauthorizedHTML} from "@core/api";
-import {client} from "@core/redis";
+import {kvb} from "@core/app";
 import Axios from "axios";
 import dotenv from "dotenv";
 import JWT from "jsonwebtoken";
@@ -42,17 +42,17 @@ export const callback = async (req: any, res: any): Promise<any> => {
         });
 
         const {id} = userResponse.data,
-            allowedUsers = JSON.parse(await client.get("discord:admins") || "[]");
+            allowedUsers = JSON.parse(await kvb.get("discord:admins") || "[]");
         if (!allowedUsers.includes(id))
             return res.status(401).send(unauthorizedHTML);
 
-        const accessTokens = JSON.parse(await client.hGet(`discord:${id}`, "access_tokens") || "[]"),
+        const accessTokens = JSON.parse(await kvb.hGet(`discord:${id}`, "access_tokens") || "[]"),
             tokenSecret = Crypto.randomBytes(8).toString("hex").slice(0, 2048),
             accessToken = await JWT.sign({user_id: id}, tokenSecret);
         accessTokens.push({"accessToken": accessToken, "tokenSecret": tokenSecret});
 
-        await client.hSet(`discord:${id}`, "data", JSON.stringify(userResponse.data));
-        await client.hSet(`discord:${id}`, "access_tokens", JSON.stringify(accessTokens));
+        await kvb.hSet(`discord:${id}`, "data", JSON.stringify(userResponse.data));
+        await kvb.hSet(`discord:${id}`, "access_tokens", JSON.stringify(accessTokens));
 
         res.cookie("id", id, {expires: new Date(Date.now() + (1000 * 60 * 60 * 24 * 365))});
         res.cookie("access_token", accessToken, {expires: new Date(Date.now() + (1000 * 60 * 60 * 24 * 365))});

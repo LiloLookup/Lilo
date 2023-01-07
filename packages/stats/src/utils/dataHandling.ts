@@ -1,8 +1,8 @@
 import * as Notifications from "@core/notifications";
-import {client} from "@core/redis";
+import {kvb} from "@core/app";
 
 export const handle = async (serverStr: string, statusResult: any) => {
-    await client.hSet(`server:${serverStr}`, "data", JSON.stringify(statusResult));
+    await kvb.hSet(`server:${serverStr}`, "data", JSON.stringify(statusResult));
     await saveData(serverStr, statusResult);
 }
 
@@ -13,13 +13,13 @@ export async function resolveStatus(serverStr: string, offlineServers: any) {
     if (!offlineServers.some(server => server.host == host && server.port == port))
         return;
 
-    await client.set("offline", JSON.stringify(offlineServers.filter(server => server.host != host || server.port != port)));
+    await kvb.set("offline", JSON.stringify(offlineServers.filter(server => server.host != host || server.port != port)));
 
-    const notifications = JSON.parse(await client.get("notifications"));
+    const notifications = JSON.parse(await kvb.get("notifications"));
     if (!notifications.includes(serverStr) && !notifications.includes(`*.${serverStr}`))
         return;
 
-    const aliases = JSON.parse(await client.get("aliases") || "[]"),
+    const aliases = JSON.parse(await kvb.get("aliases") || "[]"),
         alias = aliases.filter(alias =>
             alias.lowLevel == `${host}:${port}`)[0],
         address = (alias ? alias.topLevel.replace(":25565", "")
@@ -36,12 +36,12 @@ export const saveData = async (serverStr: string, rawData: any) => {
     const tzOffset = (new Date()).getTimezoneOffset() * 60000,
         time = (new Date(Date.now() - tzOffset)).toISOString();
 
-    let stats = JSON.parse(await client.hGet(`server:${serverStr}`, "stats") || "[]");
+    let stats = JSON.parse(await kvb.hGet(`server:${serverStr}`, "stats") || "[]");
     stats.push({
         time: time,
         online: rawData.players.online,
         rtt: rawData.roundTripLatency ? rawData.roundTripLatency : null,
     });
 
-    await client.hSet(`server:${serverStr}`, "stats", JSON.stringify(stats));
+    await kvb.hSet(`server:${serverStr}`, "stats", JSON.stringify(stats));
 }

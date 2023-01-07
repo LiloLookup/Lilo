@@ -1,5 +1,5 @@
 import {internalServerErrorHTML, notFoundHTML} from "@core/api";
-import {client} from "@core/redis";
+import {kvb} from "@core/app";
 import {Request, Response} from "express";
 
 export const serverStats = async (req: Request, res: Response) => {
@@ -8,16 +8,16 @@ export const serverStats = async (req: Request, res: Response) => {
     if (port > 65535 || isNaN(port))
         return res.status(404).send(notFoundHTML);
 
-    let aliases = JSON.parse(await client.get("aliases") || "[]"),
+    let aliases = JSON.parse(await kvb.get("aliases") || "[]"),
         serverStats;
     
     const host = req.params.address.split(":")[0].toLowerCase(),
         size = parseInt(req.query.size as string) || 0;
 
     if (aliases.some(alias => alias.topLevel == `${host}:${port}`))
-        serverStats = JSON.parse(await client.hGet(`server:${aliases.filter(alias => alias.topLevel == `${host}:${port}`)[0].lowLevel}`, "stats"));
+        serverStats = JSON.parse(await kvb.hGet(`server:${aliases.filter(alias => alias.topLevel == `${host}:${port}`)[0].lowLevel}`, "stats"));
     else
-        serverStats = JSON.parse(await client.hGet(`server:${host}:${port}`, "stats"));
+        serverStats = JSON.parse(await kvb.hGet(`server:${host}:${port}`, "stats"));
 
     if (!serverStats)
         return res.status(404).send({status: 404});

@@ -1,4 +1,4 @@
-import {client} from "@core/redis";
+import {kvb} from "@core/app";
 import {app} from "@core/api";
 import {status, statusLegacy} from "minecraft-server-util";
 import dotenv from "dotenv";
@@ -11,7 +11,7 @@ dotenv.config();
 export let notifications = null;
 
 export const startService = async () => {
-    await client.connect();
+    await kvb.connect();
     app.listen(process.env.LILO_PORT);
 
     let statusServers = null,
@@ -20,10 +20,10 @@ export const startService = async () => {
         server: string;
 
     const loop = async function () {
-        notifications = JSON.parse(await client.get("notifications") || "[]");
-        statusServers = JSON.parse(await client.get("status") || "[]");
-        offlineServers = JSON.parse(await client.get("offline") || "[]");
-        aliases = JSON.parse(await client.get("aliases") || "[]");
+        notifications = JSON.parse(await kvb.get("notifications") || "[]");
+        statusServers = JSON.parse(await kvb.get("status") || "[]");
+        offlineServers = JSON.parse(await kvb.get("offline") || "[]");
+        aliases = JSON.parse(await kvb.get("aliases") || "[]");
 
         for (server in statusServers) {
             let host = statusServers[server].split(":")[0].toLowerCase(),
@@ -34,9 +34,9 @@ export const startService = async () => {
                 if (statusResult.srvRecord &&
                     !(aliases.some(alias => alias.topLevel == `${host}:${port}`)) &&
                     !(aliases.some(alias => alias.lowLevel == `${host}:${port}`))) {
-                    const srvServer = await client.exists(`server:${statusResult.srvRecord.host}:${statusResult.srvRecord.port}`);
+                    const srvServer = await kvb.exists(`server:${statusResult.srvRecord.host}:${statusResult.srvRecord.port}`);
                     if (!srvServer && serverStr != `${statusResult.srvRecord.host}:${statusResult.srvRecord.port}`)
-                        await client.rename(`server:${host}:${port}`, `server:${statusResult.srvRecord.host}:${statusResult.srvRecord.port}`);
+                        await kvb.rename(`server:${host}:${port}`, `server:${statusResult.srvRecord.host}:${statusResult.srvRecord.port}`);
                 }
 
                 await handle(serverStr, statusResult);
@@ -46,19 +46,19 @@ export const startService = async () => {
                     if (statusLegacyResult.srvRecord &&
                         !(aliases.some(alias => alias.topLevel == `${host}:${port}`)) &&
                         !(aliases.some(alias => alias.lowLevel == `${host}:${port}`))) {
-                        const srvServer = await client.hGet(`server:${statusLegacyResult.srvRecord.host}:${statusLegacyResult.srvRecord.port}`, "data");
+                        const srvServer = await kvb.hGet(`server:${statusLegacyResult.srvRecord.host}:${statusLegacyResult.srvRecord.port}`, "data");
                         if (!srvServer && `${host}:${port}` != `${statusLegacyResult.srvRecord.host}:${statusLegacyResult.srvRecord.port}`)
-                            await client.rename(`server:${host}:${port}`, `server:${statusLegacyResult.srvRecord.host}:${statusLegacyResult.srvRecord.port}`);
+                            await kvb.rename(`server:${host}:${port}`, `server:${statusLegacyResult.srvRecord.host}:${statusLegacyResult.srvRecord.port}`);
                     }
 
                     await handle(serverStr, statusLegacyResult);
                     await resolveStatus(serverStr, offlineServers);
                 }).catch(async () => {
-                    const lastSeeen = parseInt(await client.hGet(`server:${host}:${port}`, "last_seen")) || Date.now();
+                    const lastSeeen = parseInt(await kvb.hGet(`server:${host}:${port}`, "last_seen")) || Date.now();
                     if (lastSeeen && Date.now() - lastSeeen > 7 * 24 * 60 * 60 * 1000) {
-                        await client.set("status", JSON.stringify(JSON.parse(await client.get("status") || "[]")
+                        await kvb.set("status", JSON.stringify(JSON.parse(await kvb.get("status") || "[]")
                             .filter(server => server != serverStr)));
-                        await client.del(`server:${host}${port}`);
+                        await kvb.del(`server:${host}${port}`);
                         return;
                     }
 
@@ -75,7 +75,7 @@ export const startService = async () => {
 }
 
 export const srvOrigin = async (host: string, port: number) => {
-    const aliases = JSON.parse(await client.get("aliases") || "[]"),
+    const aliases = JSON.parse(await kvb.get("aliases") || "[]"),
         alias = aliases.filter(alias => alias.topLevel == `${host}:${port}`);
 
     if (!alias || alias.length == 0)

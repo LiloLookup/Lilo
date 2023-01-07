@@ -5,8 +5,8 @@
             "@core/api": [
                 "../../packages/api/src"
             ],
-            "@core/redis": [
-                "../../packages/redis/src"
+            "@core/kvb": [
+                "../../packages/kvb"
             ],
             "@core/stats": [
                 "../../packages/stats/src"
